@@ -1,7 +1,7 @@
-import { Tabs } from "expo-router";
-import { Map, Zap, Wallet, User } from "lucide-react-native";
+import { Tabs, router } from "expo-router";
+import { Map, Zap, Wallet, User, Phone } from "lucide-react-native";
 import React from "react";
-import { Platform, Dimensions } from "react-native";
+import { Platform, Dimensions, TouchableOpacity, View, StyleSheet } from "react-native";
 import { BRAND } from "@/constants/brand";
 import { useTheme } from "@/providers/theme-provider";
 
@@ -10,8 +10,20 @@ const isSmallScreen = screenHeight < 700;
 
 export default function TabLayout() {
   const { colors } = useTheme();
+  
+  const EmergencyFAB = () => (
+    <TouchableOpacity
+      style={[styles.fab, { backgroundColor: '#FF6B6B' }]}
+      onPress={() => router.push('/emergency' as any)}
+      activeOpacity={0.8}
+    >
+      <Phone size={24} color={BRAND.colors.white} />
+    </TouchableOpacity>
+  );
+
   return (
-    <Tabs
+    <View style={styles.container}>
+      <Tabs
       screenOptions={{
         tabBarActiveTintColor: BRAND.colors.navy,
         tabBarInactiveTintColor: BRAND.colors.slate,
@@ -90,6 +102,34 @@ export default function TabLayout() {
           },
         }}
       />
-    </Tabs>
+      </Tabs>
+      <EmergencyFAB />
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  fab: {
+    position: 'absolute',
+    bottom: Platform.select({
+      ios: isSmallScreen ? 100 : 110,
+      android: isSmallScreen ? 80 : 85,
+      default: 85,
+    }),
+    right: 20,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    zIndex: 1000,
+  },
+});

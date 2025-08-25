@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Switch, TextInput, Alert } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { User, Car, Bell, Shield, HelpCircle, LogOut, ChevronRight, Zap, Moon, Edit3, Save, X } from "lucide-react-native";
+import { User, Car, Bell, Shield, HelpCircle, LogOut, ChevronRight, Zap, Moon, Edit3, Save, X, Bot, Crown, Trophy } from "lucide-react-native";
 import { router } from "expo-router";
 import { useAuth } from "@/providers/auth-provider";
 import { BRAND } from "@/constants/brand";
@@ -62,6 +62,12 @@ export default function ProfileScreen() {
     { icon: Bell, label: "Notifications", hasSwitch: true },
     { icon: Shield, label: "Privacy & Security", route: "/privacy" },
     { icon: HelpCircle, label: "Help & Support", route: "/support" },
+  ];
+
+  const premiumItems = [
+    { icon: Bot, label: "AI Assistant", route: "/chatbot" },
+    { icon: Crown, label: "Subscription Plans", route: "/subscription" },
+    { icon: Trophy, label: "Achievements", route: "/achievements" },
   ];
 
   return (
@@ -180,6 +186,23 @@ export default function ProfileScreen() {
             thumbColor={BRAND.colors.white}
           />
         </TouchableOpacity>
+
+        {premiumItems.map((item, index) => (
+          <TouchableOpacity
+            key={`premium-${index}`}
+            style={[styles.menuItem, { backgroundColor: colors.card, borderColor: colors.border }]}
+            onPress={() => item.route && router.push(item.route as any)}
+            activeOpacity={0.8}
+          >
+            <View style={styles.menuLeft}>
+              <View style={styles.menuIcon}>
+                <item.icon size={20} color={BRAND.colors.green} />
+              </View>
+              <Text style={[styles.menuLabel, { color: colors.text }]}>{item.label}</Text>
+            </View>
+            <ChevronRight size={20} color={colors.subtext} />
+          </TouchableOpacity>
+        ))}
 
         {menuItems.map((item, index) => (
           <TouchableOpacity

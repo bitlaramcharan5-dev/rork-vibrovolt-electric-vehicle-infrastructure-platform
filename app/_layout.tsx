@@ -67,6 +67,15 @@ function RootLayoutNav() {
       <Stack.Screen name="vehicles" options={{ title: 'My Vehicles' }} />
       <Stack.Screen name="privacy" options={{ title: 'Privacy & Security' }} />
       <Stack.Screen name="support" options={{ title: 'Help & Support' }} />
+      <Stack.Screen name="chatbot" options={{ title: 'AI Assistant' }} />
+      <Stack.Screen name="subscription" options={{ title: 'Subscription Plans' }} />
+      <Stack.Screen name="achievements" options={{ title: 'Achievements' }} />
+      <Stack.Screen name="need-charger" options={{ title: 'Request Charger' }} />
+      <Stack.Screen name="emergency" options={{ 
+        title: 'Emergency Services',
+        presentation: 'fullScreenModal',
+        headerShown: false
+      }} />
     </Stack>
   );
 }
