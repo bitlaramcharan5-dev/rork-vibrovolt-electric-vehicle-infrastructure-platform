@@ -10,7 +10,7 @@ import { useTheme } from "@/providers/theme-provider";
 export default function ProfileScreen() {
   const { user, logout, updateUser } = useAuth();
   const [notifications, setNotifications] = React.useState(true);
-  const { isDark, toggle } = useTheme();
+  const { isDark, toggle, colors } = useTheme();
   const [isEditing, setIsEditing] = React.useState(false);
   const [editForm, setEditForm] = React.useState({
     name: user?.name || "Demo User",
@@ -65,9 +65,9 @@ export default function ProfileScreen() {
   ];
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+    <ScrollView style={[styles.container, { backgroundColor: colors.background }]} showsVerticalScrollIndicator={false}>
       <LinearGradient
-        colors={[BRAND.colors.white, "rgba(10,14,39,0.06)"]}
+        colors={[colors.background, colors.card]}
         style={styles.profileHeader}
       >
         <View style={styles.avatarContainer}>
@@ -95,37 +95,37 @@ export default function ProfileScreen() {
         {isEditing ? (
           <View style={styles.editForm}>
             <View style={styles.inputContainer}>
-              <Text style={styles.inputLabel}>Name</Text>
+              <Text style={[styles.inputLabel, { color: colors.text }]}>Name</Text>
               <TextInput
-                style={styles.textInput}
+                style={[styles.textInput, { backgroundColor: colors.card, borderColor: colors.border, color: colors.text }]}
                 value={editForm.name}
                 onChangeText={(text) => setEditForm(prev => ({ ...prev, name: text }))}
                 placeholder="Enter your name"
-                placeholderTextColor={BRAND.colors.slate}
+                placeholderTextColor={colors.subtext}
               />
             </View>
             
             <View style={styles.inputContainer}>
-              <Text style={styles.inputLabel}>Email</Text>
+              <Text style={[styles.inputLabel, { color: colors.text }]}>Email</Text>
               <TextInput
-                style={styles.textInput}
+                style={[styles.textInput, { backgroundColor: colors.card, borderColor: colors.border, color: colors.text }]}
                 value={editForm.email}
                 onChangeText={(text) => setEditForm(prev => ({ ...prev, email: text }))}
                 placeholder="Enter your email"
-                placeholderTextColor={BRAND.colors.slate}
+                placeholderTextColor={colors.subtext}
                 keyboardType="email-address"
                 autoCapitalize="none"
               />
             </View>
             
             <View style={styles.inputContainer}>
-              <Text style={styles.inputLabel}>Phone</Text>
+              <Text style={[styles.inputLabel, { color: colors.text }]}>Phone</Text>
               <TextInput
-                style={styles.textInput}
+                style={[styles.textInput, { backgroundColor: colors.card, borderColor: colors.border, color: colors.text }]}
                 value={editForm.phone}
                 onChangeText={(text) => setEditForm(prev => ({ ...prev, phone: text }))}
                 placeholder="Enter your phone number"
-                placeholderTextColor={BRAND.colors.slate}
+                placeholderTextColor={colors.subtext}
                 keyboardType="phone-pad"
               />
             </View>
@@ -141,37 +141,37 @@ export default function ProfileScreen() {
           </View>
         ) : (
           <View style={styles.userInfo}>
-            <Text style={styles.userName}>{user?.name || "Demo User"}</Text>
-            <Text style={styles.userEmail}>{user?.email || "demo@vibrovolt.com"}</Text>
-            <Text style={styles.userPhone}>{user?.phone || "+91 98765 43210"}</Text>
+            <Text style={[styles.userName, { color: colors.text }]}>{user?.name || "Demo User"}</Text>
+            <Text style={[styles.userEmail, { color: colors.subtext }]}>{user?.email || "demo@vibrovolt.com"}</Text>
+            <Text style={[styles.userPhone, { color: colors.subtext }]}>{user?.phone || "+91 98765 43210"}</Text>
           </View>
         )}
 
-        <View style={styles.statsContainer}>
+        <View style={[styles.statsContainer, { backgroundColor: colors.card, borderColor: colors.border }]}>
           <View style={styles.statItem}>
-            <Text style={styles.statValue}>247</Text>
-            <Text style={styles.statLabel}>Sessions</Text>
+            <Text style={[styles.statValue, { color: colors.text }]}>247</Text>
+            <Text style={[styles.statLabel, { color: colors.subtext }]}>Sessions</Text>
           </View>
-          <View style={styles.statDivider} />
+          <View style={[styles.statDivider, { backgroundColor: colors.border }]} />
           <View style={styles.statItem}>
-            <Text style={styles.statValue}>1,842</Text>
-            <Text style={styles.statLabel}>kWh Charged</Text>
+            <Text style={[styles.statValue, { color: colors.text }]}>1,842</Text>
+            <Text style={[styles.statLabel, { color: colors.subtext }]}>kWh Charged</Text>
           </View>
-          <View style={styles.statDivider} />
+          <View style={[styles.statDivider, { backgroundColor: colors.border }]} />
           <View style={styles.statItem}>
-            <Text style={styles.statValue}>₹52K</Text>
-            <Text style={styles.statLabel}>Saved</Text>
+            <Text style={[styles.statValue, { color: colors.text }]}>₹52K</Text>
+            <Text style={[styles.statLabel, { color: colors.subtext }]}>Saved</Text>
           </View>
         </View>
       </LinearGradient>
 
       <View style={styles.menuSection}>
-        <TouchableOpacity style={styles.menuItem} activeOpacity={0.8} testID="appearance-toggle">
+        <TouchableOpacity style={[styles.menuItem, { backgroundColor: colors.card, borderColor: colors.border }]} activeOpacity={0.8} testID="appearance-toggle">
           <View style={styles.menuLeft}>
             <View style={styles.menuIcon}>
               <Moon size={20} color={BRAND.colors.green} />
             </View>
-            <Text style={styles.menuLabel}>Appearance</Text>
+            <Text style={[styles.menuLabel, { color: colors.text }]}>Appearance</Text>
           </View>
           <Switch
             value={isDark}
@@ -184,7 +184,7 @@ export default function ProfileScreen() {
         {menuItems.map((item, index) => (
           <TouchableOpacity
             key={index}
-            style={styles.menuItem}
+            style={[styles.menuItem, { backgroundColor: colors.card, borderColor: colors.border }]}
             onPress={() => item.route && router.push(item.route as any)}
             activeOpacity={0.8}
           >
@@ -192,7 +192,7 @@ export default function ProfileScreen() {
               <View style={styles.menuIcon}>
                 <item.icon size={20} color={BRAND.colors.green} />
               </View>
-              <Text style={styles.menuLabel}>{item.label}</Text>
+              <Text style={[styles.menuLabel, { color: colors.text }]}>{item.label}</Text>
             </View>
             {item.hasSwitch ? (
               <Switch
@@ -202,7 +202,7 @@ export default function ProfileScreen() {
                 thumbColor={BRAND.colors.white}
               />
             ) : (
-              <ChevronRight size={20} color={BRAND.colors.slate} />
+              <ChevronRight size={20} color={colors.subtext} />
             )}
           </TouchableOpacity>
         ))}
@@ -225,7 +225,6 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: BRAND.colors.white,
   },
   profileHeader: {
     padding: 24,
@@ -267,28 +266,23 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 24,
     fontWeight: "bold",
-    color: BRAND.colors.navy,
     marginBottom: 4,
   },
   userEmail: {
     fontSize: 14,
-    color: BRAND.colors.slate,
     marginBottom: 2,
   },
   userPhone: {
     fontSize: 14,
-    color: BRAND.colors.slate,
     marginBottom: 24,
   },
   statsContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgba(10,14,39,0.04)",
     borderRadius: 12,
     padding: 16,
     width: "100%",
     borderWidth: 1,
-    borderColor: "rgba(10,14,39,0.08)",
   },
   statItem: {
     flex: 1,
@@ -297,17 +291,14 @@ const styles = StyleSheet.create({
   statValue: {
     fontSize: 20,
     fontWeight: "bold",
-    color: BRAND.colors.navy,
     marginBottom: 4,
   },
   statLabel: {
     fontSize: 12,
-    color: BRAND.colors.slate,
   },
   statDivider: {
     width: 1,
     height: 30,
-    backgroundColor: "rgba(10,14,39,0.08)",
   },
   menuSection: {
     marginTop: 24,
@@ -317,12 +308,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: BRAND.colors.white,
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: "rgba(10,14,39,0.08)",
   },
   menuLeft: {
     flexDirection: "row",
@@ -339,7 +328,6 @@ const styles = StyleSheet.create({
   },
   menuLabel: {
     fontSize: 16,
-    color: BRAND.colors.navy,
   },
   logoutButton: {
     flexDirection: "row",
@@ -393,17 +381,13 @@ const styles = StyleSheet.create({
   inputLabel: {
     fontSize: 14,
     fontWeight: "600",
-    color: BRAND.colors.navy,
     marginBottom: 8,
   },
   textInput: {
-    backgroundColor: BRAND.colors.white,
     borderWidth: 1,
-    borderColor: "rgba(10,14,39,0.12)",
     borderRadius: 12,
     padding: 16,
     fontSize: 16,
-    color: BRAND.colors.navy,
   },
   saveButton: {
     flexDirection: "row",

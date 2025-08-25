@@ -5,9 +5,11 @@ import { Wallet as WalletIcon, Plus, ArrowUpRight, ArrowDownLeft, CreditCard, Gi
 import { router } from "expo-router";
 import { useWallet } from "@/providers/wallet-provider";
 import { BRAND } from "@/constants/brand";
+import { useTheme } from "@/providers/theme-provider";
 
 export default function WalletScreen() {
   const { balance, transactions, cards, carbonCredits, partners, redeemCredits } = useWallet();
+  const { colors } = useTheme();
 
   const [selectedPartnerId, setSelectedPartnerId] = useState<string>(partners[0]?.id ?? "");
   const selectedPartner = useMemo(() => partners.find(p => p.id === selectedPartnerId), [partners, selectedPartnerId]);
@@ -41,7 +43,7 @@ export default function WalletScreen() {
   };
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+    <ScrollView style={[styles.container, { backgroundColor: colors.background }]} showsVerticalScrollIndicator={false}>
       <LinearGradient
         colors={[BRAND.colors.green, BRAND.colors.greenDark]}
         style={styles.balanceCard}
@@ -76,13 +78,13 @@ export default function WalletScreen() {
       </LinearGradient>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Carbon Credits</Text>
-        <View style={styles.creditsCard} testID="carbon-credits-card">
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>Carbon Credits</Text>
+        <View style={[styles.creditsCard, { backgroundColor: colors.card, borderColor: colors.border }]} testID="carbon-credits-card">
           <View style={styles.creditsHeader}>
             <View style={styles.creditsIconWrap}>
               <Leaf size={20} color={BRAND.colors.green} />
             </View>
-            <Text style={styles.creditsValue}>{carbonCredits}</Text>
+            <Text style={[styles.creditsValue, { color: colors.text }]}>{carbonCredits}</Text>
             <Text style={styles.creditsUnit}>credits</Text>
           </View>
 
@@ -106,9 +108,9 @@ export default function WalletScreen() {
 
             <View style={styles.redeemRow}>
               <TextInput
-                style={styles.redeemInput}
+                style={[styles.redeemInput, { backgroundColor: colors.card, borderColor: colors.border, color: colors.text }]}
                 placeholder={`Min ${selectedPartner?.minCredits ?? 0}`}
-                placeholderTextColor={BRAND.colors.slate}
+                placeholderTextColor={colors.subtext}
                 keyboardType="numeric"
                 value={creditsToRedeem}
                 onChangeText={setCreditsToRedeem}
@@ -125,14 +127,14 @@ export default function WalletScreen() {
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Payment Methods</Text>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>Payment Methods</Text>
         {cards.map((card) => (
-          <TouchableOpacity key={card.id} style={styles.cardItem} activeOpacity={0.8}>
+          <TouchableOpacity key={card.id} style={[styles.cardItem, { backgroundColor: colors.card, borderColor: colors.border }]} activeOpacity={0.8}>
             <View style={styles.cardIcon}>
               <CreditCard size={24} color={BRAND.colors.green} />
             </View>
             <View style={styles.cardInfo}>
-              <Text style={styles.cardNumber}>•••• {card.last4}</Text>
+              <Text style={[styles.cardNumber, { color: colors.text }]}>•••• {card.last4}</Text>
               <Text style={styles.cardType}>{card.type}</Text>
             </View>
             {card.isDefault && (
@@ -151,14 +153,14 @@ export default function WalletScreen() {
 
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Recent Transactions</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>Recent Transactions</Text>
           <TouchableOpacity>
             <Text style={styles.seeAllText}>See All</Text>
           </TouchableOpacity>
         </View>
 
         {transactions.map((transaction) => (
-          <View key={transaction.id} style={styles.transactionItem}>
+          <View key={transaction.id} style={[styles.transactionItem, { backgroundColor: colors.card, borderColor: colors.border }]}>
             <View style={[
               styles.transactionIcon,
               transaction.type === "credit" ? styles.creditIcon : styles.debitIcon,
@@ -170,7 +172,7 @@ export default function WalletScreen() {
               )}
             </View>
             <View style={styles.transactionInfo}>
-              <Text style={styles.transactionTitle}>{transaction.title}</Text>
+              <Text style={[styles.transactionTitle, { color: colors.text }]}>{transaction.title}</Text>
               <Text style={styles.transactionDate}>{transaction.date}</Text>
             </View>
             <Text
@@ -191,7 +193,6 @@ export default function WalletScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: BRAND.colors.white,
   },
   balanceCard: {
     margin: 16,
@@ -254,7 +255,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: "600",
-    color: BRAND.colors.navy,
     marginBottom: 16,
   },
   seeAllText: {
@@ -262,11 +262,9 @@ const styles = StyleSheet.create({
     color: BRAND.colors.green,
   },
   creditsCard: {
-    backgroundColor: "rgba(10,14,39,0.04)",
     borderRadius: 16,
     padding: 16,
     borderWidth: 1,
-    borderColor: "rgba(10,14,39,0.08)",
   },
   creditsHeader: {
     flexDirection: "row",
@@ -285,7 +283,6 @@ const styles = StyleSheet.create({
   creditsValue: {
     fontSize: 28,
     fontWeight: "700",
-    color: BRAND.colors.navy,
     marginRight: 6,
   },
   creditsUnit: {
@@ -334,10 +331,7 @@ const styles = StyleSheet.create({
     height: 44,
     borderRadius: 12,
     paddingHorizontal: 12,
-    backgroundColor: "rgba(255,255,255,0.05)",
     borderWidth: 1,
-    borderColor: BRAND.colors.border,
-    color: BRAND.colors.white,
     marginRight: 8,
   },
   redeemButton: {
@@ -360,12 +354,10 @@ const styles = StyleSheet.create({
   cardItem: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: BRAND.colors.white,
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: "rgba(10,14,39,0.08)",
   },
   cardIcon: {
     width: 48,
@@ -382,7 +374,6 @@ const styles = StyleSheet.create({
   cardNumber: {
     fontSize: 16,
     fontWeight: "600",
-    color: BRAND.colors.white,
     marginBottom: 4,
   },
   cardType: {
@@ -421,12 +412,10 @@ const styles = StyleSheet.create({
   transactionItem: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: BRAND.colors.white,
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: "rgba(10,14,39,0.08)",
   },
   transactionIcon: {
     width: 40,
@@ -448,7 +437,6 @@ const styles = StyleSheet.create({
   transactionTitle: {
     fontSize: 16,
     fontWeight: "500",
-    color: BRAND.colors.navy,
     marginBottom: 4,
   },
   transactionDate: {

@@ -7,8 +7,11 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchNearbyStations } from "@/services/stations";
 import { Station, VehicleCategory } from "@/types/station";
 import HyderabadMap from "@/components/HyderabadMap";
+import { useTheme } from "@/providers/theme-provider";
+import { BRAND } from "@/constants/brand";
 
 export default function DiscoverScreen() {
+  const { colors } = useTheme();
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedFilter, setSelectedFilter] = useState<string>("all");
   const [vehicle, setVehicle] = useState<VehicleCategory | 'All'>("All");
@@ -58,25 +61,25 @@ export default function DiscoverScreen() {
 
   const renderStation = ({ item }: { item: Station }) => (
     <TouchableOpacity
-      style={styles.stationCard}
+      style={[styles.stationCard, { backgroundColor: colors.card, borderColor: colors.border }]}
       onPress={() => router.push(`/station/${item.id}` as any)}
       activeOpacity={0.8}
       testID={`station-${item.id}`}
     >
       <View style={styles.stationHeader}>
         <View style={styles.stationInfo}>
-          <Text style={styles.stationName}>{item.name}</Text>
+          <Text style={[styles.stationName, { color: colors.text }]}>{item.name}</Text>
           <View style={styles.stationMeta}>
-            <MapPin size={14} color="#8B92B9" />
-            <Text style={styles.stationDistance}>{item.distance}</Text>
+            <MapPin size={14} color={colors.subtext} />
+            <Text style={[styles.stationDistance, { color: colors.subtext }]}>{item.distance}</Text>
             <View style={styles.ratingContainer}>
               <Star size={14} color="#FFD700" fill="#FFD700" />
-              <Text style={styles.rating}>{item.rating}</Text>
+              <Text style={[styles.rating, { color: colors.subtext }]}>{item.rating}</Text>
             </View>
           </View>
         </View>
         <View style={[styles.statusBadge, item.available > 0 ? styles.availableBadge : styles.busyBadge]}>
-          <Text style={styles.statusText}>
+          <Text style={[styles.statusText, { color: item.available > 0 ? colors.primary : "#FF6B6B" }]}>
             {item.available > 0 ? `${item.available} Available` : "Busy"}
           </Text>
         </View>
@@ -84,38 +87,38 @@ export default function DiscoverScreen() {
 
       <View style={styles.stationDetails}>
         <View style={styles.detailItem}>
-          <Zap size={16} color="#00FF88" />
-          <Text style={styles.detailText}>{item.type}</Text>
+          <Zap size={16} color={colors.primary} />
+          <Text style={[styles.detailText, { color: colors.text }]}>{item.type}</Text>
         </View>
         <View style={styles.detailItem}>
-          <Text style={styles.priceText}>₹{item.price}/kWh</Text>
+          <Text style={[styles.priceText, { color: colors.primary }]}>₹{item.price}/kWh</Text>
         </View>
       </View>
 
       {item.onDemand && (
-        <View style={styles.onDemandBadge}>
-          <Truck size={14} color="#00FF88" />
-          <Text style={styles.onDemandText}>On-Demand Available</Text>
+        <View style={[styles.onDemandBadge, { backgroundColor: `${colors.primary}20` }]}>
+          <Truck size={14} color={colors.primary} />
+          <Text style={[styles.onDemandText, { color: colors.primary }]}>On-Demand Available</Text>
         </View>
       )}
     </TouchableOpacity>
   );
 
   return (
-    <View style={styles.container}>
-      <LinearGradient colors={["#0A0E27", "#10163A"]} style={styles.headerGradient}>
-        <View style={styles.searchContainer}>
-          <Search size={20} color="#8B92B9" />
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <View style={[styles.headerSection, { backgroundColor: colors.background }]}>
+        <View style={[styles.searchContainer, { backgroundColor: colors.card }]}>
+          <Search size={20} color={colors.subtext} />
           <TextInput
-            style={styles.searchInput}
+            style={[styles.searchInput, { color: colors.text }]}
             placeholder="Search Hyderabad stations..."
-            placeholderTextColor="#8B92B9"
+            placeholderTextColor={colors.subtext}
             value={searchQuery}
             onChangeText={setSearchQuery}
             testID="search-input"
           />
           <TouchableOpacity style={styles.filterButton}>
-            <Filter size={20} color="#00FF88" />
+            <Filter size={20} color={colors.primary} />
           </TouchableOpacity>
         </View>
 
@@ -123,13 +126,13 @@ export default function DiscoverScreen() {
           {filters.map((filter) => (
             <TouchableOpacity
               key={filter.id}
-              style={[styles.filterChip, selectedFilter === filter.id && styles.filterChipActive]}
+              style={[styles.filterChip, { backgroundColor: colors.card, borderColor: colors.border }, selectedFilter === filter.id && { backgroundColor: colors.primary, borderColor: colors.primary }]}
               onPress={() => setSelectedFilter(filter.id)}
               activeOpacity={0.8}
               testID={`filter-${filter.id}`}
             >
-              <filter.icon size={16} color={selectedFilter === filter.id ? "#0A0E27" : "#8B92B9"} />
-              <Text style={[styles.filterLabel, selectedFilter === filter.id && styles.filterLabelActive]}>
+              <filter.icon size={16} color={selectedFilter === filter.id ? BRAND.colors.navy : colors.subtext} />
+              <Text style={[{ color: colors.subtext, fontSize: 14, marginLeft: 6 }, selectedFilter === filter.id && { color: BRAND.colors.navy, fontWeight: "600" }]}>
                 {filter.label}
               </Text>
             </TouchableOpacity>
@@ -140,30 +143,30 @@ export default function DiscoverScreen() {
           {vehicleFilters.map((vf) => (
             <TouchableOpacity
               key={vf.id}
-              style={[styles.filterChip, vehicle === vf.id && styles.filterChipActive]}
+              style={[styles.filterChip, { backgroundColor: colors.card, borderColor: colors.border }, vehicle === vf.id && { backgroundColor: colors.primary, borderColor: colors.primary }]}
               onPress={() => setVehicle(vf.id)}
               activeOpacity={0.8}
               testID={`vehicle-${vf.id}`}
             >
-              <vf.icon size={16} color={vehicle === vf.id ? "#0A0E27" : "#8B92B9"} />
-              <Text style={[styles.filterLabel, vehicle === vf.id && styles.filterLabelActive]}>
+              <vf.icon size={16} color={vehicle === vf.id ? BRAND.colors.navy : colors.subtext} />
+              <Text style={[{ color: colors.subtext, fontSize: 14, marginLeft: 6 }, vehicle === vf.id && { color: BRAND.colors.navy, fontWeight: "600" }]}>
                 {vf.label}
               </Text>
             </TouchableOpacity>
           ))}
         </ScrollView>
-      </LinearGradient>
+      </View>
 
       <HyderabadMap stations={filteredStations} />
 
       <TouchableOpacity style={styles.onDemandButton} onPress={() => router.push("/need-charger" as any)} activeOpacity={0.8}>
-        <LinearGradient colors={["#00FF88", "#00CC6F"]} style={styles.onDemandGradient} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}>
-          <Truck size={24} color="#0A0E27" />
+        <LinearGradient colors={[colors.primary, colors.accent]} style={styles.onDemandGradient} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}>
+          <Truck size={24} color={BRAND.colors.navy} />
           <View style={styles.onDemandContent}>
-            <Text style={styles.onDemandTitle}>Need charging at your location?</Text>
-            <Text style={styles.onDemandSubtitle}>Request on-demand service</Text>
+            <Text style={[styles.onDemandTitle, { color: BRAND.colors.navy }]}>Need charging at your location?</Text>
+            <Text style={[styles.onDemandSubtitle, { color: BRAND.colors.navy }]}>Request on-demand service</Text>
           </View>
-          <Navigation size={20} color="#0A0E27" />
+          <Navigation size={20} color={BRAND.colors.navy} />
         </LinearGradient>
       </TouchableOpacity>
 
@@ -180,39 +183,36 @@ export default function DiscoverScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#0A0E27" },
-  headerGradient: { paddingHorizontal: 16, paddingBottom: 16 },
-  searchContainer: { flexDirection: "row", alignItems: "center", backgroundColor: "rgba(255, 255, 255, 0.05)", borderRadius: 12, paddingHorizontal: 16, marginTop: 16, marginBottom: 16 },
-  searchInput: { flex: 1, height: 48, fontSize: 16, color: "#FFFFFF", marginLeft: 12 },
+  container: { flex: 1 },
+  headerSection: { paddingHorizontal: 16, paddingBottom: 16 },
+  searchContainer: { flexDirection: "row", alignItems: "center", borderRadius: 12, paddingHorizontal: 16, marginTop: 16, marginBottom: 16 },
+  searchInput: { flex: 1, height: 48, fontSize: 16, marginLeft: 12 },
   filterButton: { padding: 8 },
   filterScroll: { maxHeight: 40 },
   filterContent: { paddingRight: 16 },
-  filterChip: { flexDirection: "row", alignItems: "center", backgroundColor: "rgba(255, 255, 255, 0.05)", paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, marginRight: 8, borderWidth: 1, borderColor: "rgba(255, 255, 255, 0.1)" },
-  filterChipActive: { backgroundColor: "#00FF88", borderColor: "#00FF88" },
-  filterLabel: { color: "#8B92B9", fontSize: 14, marginLeft: 6 },
-  filterLabelActive: { color: "#0A0E27", fontWeight: "600" },
+  filterChip: { flexDirection: "row", alignItems: "center", paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, marginRight: 8, borderWidth: 1 },
   onDemandButton: { marginHorizontal: 16, marginVertical: 16, borderRadius: 12, overflow: "hidden" },
   onDemandGradient: { flexDirection: "row", alignItems: "center", padding: 16 },
   onDemandContent: { flex: 1, marginLeft: 12 },
-  onDemandTitle: { fontSize: 16, fontWeight: "600", color: "#0A0E27" },
-  onDemandSubtitle: { fontSize: 14, color: "#0A0E27", opacity: 0.8, marginTop: 2 },
+  onDemandTitle: { fontSize: 16, fontWeight: "600" },
+  onDemandSubtitle: { fontSize: 14, opacity: 0.8, marginTop: 2 },
   listContent: { paddingHorizontal: 16, paddingBottom: 100 },
-  stationCard: { backgroundColor: "rgba(255, 255, 255, 0.05)", borderRadius: 16, padding: 16, marginBottom: 12, borderWidth: 1, borderColor: "rgba(255, 255, 255, 0.1)" },
+  stationCard: { borderRadius: 16, padding: 16, marginBottom: 12, borderWidth: 1 },
   stationHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 },
   stationInfo: { flex: 1 },
-  stationName: { fontSize: 18, fontWeight: "600", color: "#FFFFFF", marginBottom: 4 },
+  stationName: { fontSize: 18, fontWeight: "600", marginBottom: 4 },
   stationMeta: { flexDirection: "row", alignItems: "center" },
-  stationDistance: { fontSize: 14, color: "#8B92B9", marginLeft: 4, marginRight: 12 },
+  stationDistance: { fontSize: 14, marginLeft: 4, marginRight: 12 },
   ratingContainer: { flexDirection: "row", alignItems: "center" },
-  rating: { fontSize: 14, color: "#8B92B9", marginLeft: 4 },
+  rating: { fontSize: 14, marginLeft: 4 },
   statusBadge: { paddingHorizontal: 12, paddingVertical: 6, borderRadius: 8 },
   availableBadge: { backgroundColor: "rgba(0, 255, 136, 0.2)" },
   busyBadge: { backgroundColor: "rgba(255, 107, 107, 0.2)" },
-  statusText: { fontSize: 12, fontWeight: "600", color: "#00FF88" },
+  statusText: { fontSize: 12, fontWeight: "600" },
   stationDetails: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
   detailItem: { flexDirection: "row", alignItems: "center" },
-  detailText: { fontSize: 14, color: "#B8BED9", marginLeft: 6 },
-  priceText: { fontSize: 16, fontWeight: "600", color: "#00FF88" },
-  onDemandBadge: { flexDirection: "row", alignItems: "center", backgroundColor: "rgba(0, 255, 136, 0.1)", paddingHorizontal: 12, paddingVertical: 6, borderRadius: 8, marginTop: 12, alignSelf: "flex-start" },
-  onDemandText: { fontSize: 12, color: "#00FF88", marginLeft: 6, fontWeight: "500" },
+  detailText: { fontSize: 14, marginLeft: 6 },
+  priceText: { fontSize: 16, fontWeight: "600" },
+  onDemandBadge: { flexDirection: "row", alignItems: "center", paddingHorizontal: 12, paddingVertical: 6, borderRadius: 8, marginTop: 12, alignSelf: "flex-start" },
+  onDemandText: { fontSize: 12, marginLeft: 6, fontWeight: "500" },
 });
